@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+int min_degree;
+
 // structure
 
 struct Node {
@@ -15,15 +17,13 @@ struct Node {
 	struct Node* child_arr;
 };
 
-struct B_tree{	
+struct B_tree {
 	struct Node* root;
-	int min_degree;
 };
 
-
 // function
-struct B_tree* CreateTree(int min_degree);
-struct Node* CreateNode(int min_degree);
+struct B_tree* CreateTree();
+struct Node* CreateNode();
 void InsertKey(struct B_tree* tree, int key);
 void NonFull(struct Node* node, int key);
 
