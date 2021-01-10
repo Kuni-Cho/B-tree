@@ -24,7 +24,16 @@ struct B_tree {
 // function
 struct B_tree* CreateTree();
 struct Node* CreateNode();
+void Visual(struct B_tree* B_Tree);
 void InsertKey(struct B_tree* tree, int key);
 void NonFull(struct Node* node, int key);
+void SplitChild(struct Node* node_x, int index);
+
+//Queue
+#define MAX 10000
+int IsEmpty(void);
+int IsFull(void);
+void addq(int value);
+int deleteq();
 
 #endif

@@ -1,5 +1,16 @@
 #include "function_set.h"
 
+void Visual(struct B_tree* B_Tree) {
+	//queue
+	printf("key len, %d\n", B_Tree->root->key_len);
+
+	for (int i = 0; i < B_Tree->root->key_len; i++)
+	{
+		printf("%d ", B_Tree->root->key_arr[i]);
+	}
+	printf("\n");
+}
+
 struct Node* CreateNode() {
 	struct Node* newNode = (struct Node*)malloc(sizeof(struct Node));
 	newNode->leaf = false;
@@ -21,6 +32,7 @@ struct B_tree* CreateTree() {
 void InsertKey(struct B_tree* tree, int key) {
 	struct Node* origin_root = tree->root;
 
+	//찼을때
 	if (origin_root->key_len == (2 * min_degree - 1)) {
 		struct Node* newNode = CreateNode(min_degree);
 		tree->root = newNode;
@@ -28,8 +40,9 @@ void InsertKey(struct B_tree* tree, int key) {
 		tree->root->child_arr[tree->root->child_len] = *origin_root;
 		tree->root->child_len++;
 		SplitChild(tree->root, 0); //tree, index
-		NonFull(tree->root, key) // tree, key
+		NonFull(tree->root, key); // tree, key
 	}
+	//안찼을때
 	else {
 		NonFull(origin_root, key);
 	}
@@ -53,8 +66,13 @@ void NonFull(struct Node* node, int key) {
 			i--;
 		}
 		i++;
-		//int a= node->child_arr[i]->key_len
-		//NonFull(node->child_arr[i])
+		if (node->child_arr[i].key_len == (2 * min_degree - 1)) {
+			SplitChild(node, i);
+			NonFull(node, key);
+		}
+		else {
+			NonFull(&node->child_arr[i], key);
+		}
 	}
 }
 
@@ -70,11 +88,13 @@ void SplitChild(struct Node* node_x, int index) {
 	if (!node_y->leaf) {
 		for (int j = 0; j < min_degree; j++) {
 			node_z->child_arr[j] = node_y->child_arr[j + min_degree];
-			//y의 뒤쪽은 초기화
 		}
 	}
+	//y의 뒤쪽은 초기화
+
 	node_y->key_len = min_degree - 1;
 	node_y->child_len = min_degree;
+	// x에서 chidren index를 뒤로 넘겨줌
 	for (int j = node_x->child_len - 1; j > index; j--)
 	{
 		node_x->child_arr[j + 1] = node_x->child_arr[j];
