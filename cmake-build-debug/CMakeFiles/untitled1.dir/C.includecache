@@ -1,0 +1,20 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/colapa/CLionProjects/untitled1/function_set.c
+function_set.h
+/Users/colapa/CLionProjects/untitled1/function_set.h
+
+/Users/colapa/CLionProjects/untitled1/function_set.h
+stdio.h
+-
+stdlib.h
+-
+stdbool.h
+-
+
