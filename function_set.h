@@ -29,11 +29,23 @@ struct Searched {
 // function
 struct B_tree* CreateTree();
 struct Node* CreateNode();
+
 void Visual(struct Node* node, int level);
+bool Search(struct Node* node, int key);
+
+// Insert
 void InsertKey(struct B_tree* tree, int key);
 void NonFull(struct Node* node, int key);
 void SplitChild(struct Node* node_x, int index);
-struct Searched Search(struct Node* node, int key, int num);
+
+// Delete
+void Delete_key(struct B_tree* tree, struct Node* x, int key);
+void Borrow_Right(struct Node* x, int idx);
+void Borrow_Left(struct Node* x, int idx);
+bool Change_Root(struct B_tree* tree, struct Node* x);
+void merge(struct Node* x, int idx);
+int Succ(struct Node* child_x);
+int Pred(struct Node* child_x);
 
 //Queue
 #define MAX 10000
