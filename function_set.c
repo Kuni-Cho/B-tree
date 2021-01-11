@@ -25,7 +25,7 @@ void free_node(struct Node* node) {
 	//printf("node->child_arr %d\n", node->child_arr[0].key_arr[0]);
 	/*free(node->child_arr);
 	free(node->key_arr);*/
-	//free(node);
+	free(node);
 }
 
 struct Node* CreateNode() {
@@ -263,9 +263,9 @@ void Borrow_Right(struct Node* x, int idx) {
 }
 int step = 0;//debug
 void Delete_key(struct B_tree* tree, struct Node* x, int key) {
-	printf("\n\n\n\n");// debug
+	//printf("\n\n\n\n");// debug
 	printf("step: %d\n", step++);// debug
-	Visual(tree->root, 0);// debug
+	//Visual(tree->root, 0);// debug
 
 	int idx = 0; // idx of child
 	for (; idx < x->key_len; idx++) {
@@ -274,14 +274,22 @@ void Delete_key(struct B_tree* tree, struct Node* x, int key) {
 		}
 	}
 
-	if (key == x->key_arr[idx]) {
+	int key_idx = idx;
+	if (key_idx == x->key_len) {
+		key_idx--;
+	}
+
+	if (key == x->key_arr[key_idx]) {
 		// case 1
-		printf("case 1\n");
 		if (x->leaf) {
+			printf("case 1\n");
 			for (int i = idx; i < x->key_len - 1; i++) {
 				x->key_arr[i] = x->key_arr[i + 1];
 			}
 			x->key_len--;
+			x->child_len--;
+
+			return;
 		}
 		// case 2
 		else {
@@ -307,11 +315,11 @@ void Delete_key(struct B_tree* tree, struct Node* x, int key) {
 				printf("case 2-c \n");// debug
 				merge(x, idx);
 				if (Change_Root(tree, x)) {
-					Delete_key(tree, tree->root, key);
+					//Delete_key(tree, tree->root, key);
 					return;
 				}
 				else {
-					Delete_key(tree, x, key);
+					//Delete_key(tree, x, key);
 					return;
 				}
 			}
@@ -343,14 +351,11 @@ void Delete_key(struct B_tree* tree, struct Node* x, int key) {
 			}
 			// case 3-b
 			else {
-				int key_idx = idx;
-				if (key_idx == x->key_len) {
-					key_idx--;
-				}
 				printf("idx %d key idx %d\n", idx, key_idx);
 				printf("case 3-b \n");// debug
 				struct Node* y = &x->child_arr[key_idx];
 				struct Node* z = &x->child_arr[key_idx + 1];
+				printf("z len1 %d\n", z->child_len);
 
 				// y에 x,z 병합
 				//printf("\n\n\n\n");// debug
@@ -382,9 +387,15 @@ void Delete_key(struct B_tree* tree, struct Node* x, int key) {
 				//printf("d3: %d\n", step);// debug
 				//Visual(tree->root, 0);// debug
 
+				for (int i = 0; i < z->child_len; i++)
+				{
+					printf("z %d\n", z->key_arr[i]);
+				}
+				printf("z len2 %d\n", z->child_len);
+
 				for (int i = 0; i < z->child_len; i++) {
 					y->child_arr[y->child_len] = z->child_arr[i];
-					y->child_len++;
+					if (!y->leaf) { y->child_len++; }
 				}
 
 				printf("free_node_z\n");
