@@ -10,20 +10,20 @@ int min_degree;
 // structure
 
 struct Node {
-    bool leaf;
-    int key_len;
-    int child_len;
-    int* key_arr;
-    struct Node* child_arr;
+	bool leaf;
+	int key_len;
+	int child_len;
+	int* key_arr;
+	struct Node* child_arr;
 };
 
 struct B_tree {
-    struct Node* root;
+	struct Node* root;
 };
 
 struct Searched {
-    struct Node* node;
-    int index;
+	struct Node* node;
+	int index;
 };
 
 // function
