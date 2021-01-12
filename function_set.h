@@ -6,15 +6,21 @@
 #include <stdbool.h>
 
 int min_degree;
+int size;
+//#define min_degree = 2  //const
 
-// structure
+/* structures */
 
 struct Node {
 	bool leaf;
 	int key_len;
 	int child_len;
 	int* key_arr;
-	struct Node* child_arr;
+	struct Node** child_arr;
+
+	////use this when use const array
+	//int key_arr[2 * min_degree -1];
+	//struct Node* child_arr[2 * min_degree -1];
 };
 
 struct B_tree {
@@ -26,10 +32,13 @@ struct Searched {
 	int index;
 };
 
-// function
-struct B_tree* CreateTree();
+/* functions */
+
+// Create
+struct B_tree CreateTree();
 struct Node* CreateNode();
 
+// Search
 void Visual(struct Node* node, int level);
 bool Search(struct Node* node, int key);
 
@@ -42,16 +51,9 @@ void SplitChild(struct Node* node_x, int index);
 void Delete_key(struct B_tree* tree, struct Node* x, int key);
 void Borrow_Right(struct Node* x, int idx);
 void Borrow_Left(struct Node* x, int idx);
-bool Change_Root(struct B_tree* tree, struct Node* x);
+bool Change_Root(struct B_tree tree, struct Node* x);
 void merge(struct Node* x, int idx);
 int Succ(struct Node* child_x);
 int Pred(struct Node* child_x);
-
-//Queue
-#define MAX 10000
-int IsEmpty(void);
-int IsFull(void);
-void addq(int value);
-int deleteq();
 
 #endif //UNTITLED1_FUNCTION_SET_H
