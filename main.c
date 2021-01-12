@@ -1,38 +1,48 @@
 #include "function_set.h"
 
 int main() {
-	min_degree = 2;
-	struct B_tree* B_Tree = CreateTree(2);
+	// 1. Input Min_degree
+	printf("*****************\n");
+	printf("** Enter the min_degree ** ");
+	scanf_s("%d", &min_degree);
+	printf("** Enter the number of index ** ");
+	scanf_s("%d", &size);
+	printf("\n** Init Tree ** \n");
 
-	for (int i = 0; i < 100; i++) {
-		InsertKey(B_Tree, i);
+	// 2. Create Tree
+	struct B_tree B_Tree = CreateTree();
+
+	// 3. Create Node in Tree
+	for (int i = 0; i < size; i++) {
+		InsertKey(&B_Tree, i);
+	}
+	printf("*****************\n");
+	Visual(B_Tree.root, 0);
+	printf("\n");
+
+	// 4. Create Test Case
+	int* out_arr = (int*)malloc(sizeof(int) * size);
+
+	for (int i = 0; i < size; i++) {
+		out_arr[i] = size - 1 - i;
 	}
 
-	Visual(B_Tree->root, 0);
-
-	/*int out_arr[10] = {0, 1, 20, 30, 100 };*/
-	int out_arr[100];
-	for (int i = 0; i < 100; i++) {
-		out_arr[i] = 100 - 1 - i;
-	}
-
-	//for (int i = 0; i < 100; i++) {
-	//	out_arr[i] = i;
-	//}
-
-	for (int i = 0; i < 100; i++) {
-		bool result = Search(B_Tree->root, out_arr[i]);
+	// 5. Start Test
+	for (int i = 0; i < size; i++) {
+		printf("*****************\n");
+		bool result = Search(B_Tree.root, out_arr[i]);
 		if (result) {
-			printf("삭제할 번호 : %d\n\n", out_arr[i]);
-			Delete_key(B_Tree, B_Tree->root, out_arr[i]);
-			printf("\n");
-			//Visual(B_Tree->root, 0);
+			printf("Target to Delete : %d\n", out_arr[i]);
+			printf("*****************\n");
+			Delete_key(&B_Tree, B_Tree.root, out_arr[i]);
+			Visual(B_Tree.root, 0);
 			printf("\n\n");
 		}
 		else {
-			printf("찾는 값이 없습니다 Key : %d\n\n", out_arr[i]);
+			printf("Target Not Found, Target is : %d\n\n", out_arr[i]);
 		}
 	}
+	free(out_arr);
 
 	return 0;
 }
