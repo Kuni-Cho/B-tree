@@ -44,8 +44,8 @@ struct Node* CreateNode() {
 	newNode->ptr_len = 0;
 	newNode->prev_node = NULL;
 	newNode->next_node = NULL;
-	/*newNode->key_arr = (int*)malloc(sizeof(int) * (2 * min_degree - 1));
-	newNode->ptr_arr = (struct Node**)malloc(sizeof(struct Node*) * (2 * min_degree));*/
+	//newNode->key_arr = (int*)malloc(sizeof(int) * (2 * min_degree - 1));
+	//newNode->ptr_arr = (struct Node**)malloc(sizeof(struct Node*) * (2 * min_degree));
 
 	return newNode;
 };
@@ -61,7 +61,10 @@ struct BP_tree CreateTree() {
 
 void InsertKey(struct BP_tree* tree, int key) {
 	struct Node* origin_root = tree->root;
-
+	//print_debug(*tree);//debug
+	//printf("\n");//debug
+	//Visual_head(tree);//debug
+	//printf("\n");//debug
 	// if origin_root is Full
 	if (origin_root->key_len == (2 * min_degree - 1)) {
 		struct Node* newNode = CreateNode();
@@ -89,6 +92,10 @@ void SplitChild(struct Node* node_x, int index) {
 		node_z->leaf = node_y->leaf; // if y is leaf, than z is leaf
 		node_z->key_len = min_degree; // z key is always (t, min_key+1 num)
 		// set prev next
+		if (node_y->next_node != NULL) {
+			node_z->next_node = node_y->next_node;
+			node_y->next_node->prev_node = node_z;
+		}
 		node_y->next_node = node_z;
 		node_z->prev_node = node_y;
 
@@ -192,7 +199,7 @@ bool Search(struct Node* node, int key) {
 	}
 
 	if (node->leaf && key == node->key_arr[idx]) {
-		printf("Search Success : %d\n", key);
+		//printf("Search Success : %d\n", key);//debug
 		return true;
 	}
 
@@ -206,7 +213,7 @@ bool Search(struct Node* node, int key) {
 		result = Search(node->ptr_arr[idx], key);
 	}
 	else {
-		printf("Search Failed %d\n", key);
+		//printf("Search Failed %d\n", key);//debug
 	}
 	return result;
 }
@@ -220,7 +227,7 @@ void Borrow_Left(struct Node* x, int idx) {
 	struct Node* z = x->ptr_arr[idx];
 
 	if (y->leaf) {
-		printf("Borrow_left_1\n");
+		//printf("Borrow_left_1\n");//debug
 		// 1. Make z node's extra space(Z[0]) for Y[-1]
 		for (int i = 0; i < z->key_len; i++) {
 			z->key_arr[z->key_len - i] = z->key_arr[z->key_len - i - 1];
@@ -233,7 +240,7 @@ void Borrow_Left(struct Node* x, int idx) {
 		y->key_len--;
 	}
 	else {
-		printf("Borrow_left_2\n");
+		//printf("Borrow_left_2\n");//debug
 		// 1. Make z node's extra space(Z[0]) for X[idx]
 		for (int i = 0; i < z->key_len; i++) {
 			z->key_arr[z->key_len - i] = z->key_arr[z->key_len - i - 1];
@@ -259,7 +266,7 @@ void Borrow_Right(struct Node* x, int idx) {
 	struct Node* z = x->ptr_arr[idx + 1];
 
 	if (y->leaf) {
-		printf("Borrow_right_1\n");
+		//printf("Borrow_right_1\n");//debug
 		// 1. Make y node's extra space(Y[-1]) for Z[0]
 		y->key_len++;
 
@@ -272,7 +279,7 @@ void Borrow_Right(struct Node* x, int idx) {
 		z->key_len--;
 	}
 	else {
-		printf("Borrow_right_2\n");
+		//printf("Borrow_right_2\n");//debug
 		// 1. Make y node's extra space(z[-1]) for x[idx]
 		y->key_len++;
 
@@ -298,25 +305,25 @@ void free_node(struct Node* node) {
 	/*free(node->ptr_arr);
 	free(node->key_arr);*/
 	free(node);
-	printf("Free Complete\n");
+	//printf("Free Complete\n");//debug
 }
 
 bool Change_Root(struct BP_tree* tree, struct Node* x) {
 	bool result = false;
 	if (x->key_len == 0) {
-		printf("Root Changed\n");
+		//printf("Root Changed\n");//debug
 		tree->root = x->ptr_arr[0];
 
 		free_node(x);
 		result = true;
 		return result;
 	}
-	printf("Root_not Changed\n");
+	//printf("Root_not Changed\n");//dubug
 	return result;
 }
 
 void Delete_key(struct BP_tree* tree, struct Node* x, int key) {
-	////debug
+	//////debug
 	//debug_num = 0;
 	//step++;
 	//print_debug(*tree);
@@ -334,11 +341,11 @@ void Delete_key(struct BP_tree* tree, struct Node* x, int key) {
 	if (key_idx == x->key_len) {
 		key_idx--;
 	}
-	if (!x->leaf && idx == x->key_arr[idx]) idx++;
+	if (!x->leaf && key == x->key_arr[key_idx]) idx++;
 
 	if (x->leaf && key == x->key_arr[key_idx]) {
 		// case 1, find key and node is leaf at node x
-		printf("case 1 \n");//debug
+		//printf("case 1 \n");//debug
 		for (int i = idx; i < x->key_len - 1; i++) {
 			x->key_arr[i] = x->key_arr[i + 1];
 		}
@@ -351,31 +358,31 @@ void Delete_key(struct BP_tree* tree, struct Node* x, int key) {
 	}
 	// case 3, key not found at node x
 	else {
-		printf("idx = %d ", idx);
+		//printf("idx = %d ", idx);//debug
 		// case 3-0, if (ptr[idx] len > min_degree -1), go
 		if (x->ptr_arr[idx]->key_len > min_degree - 1) {
-			printf("case 3-0 \n");// debug
+			//printf("case 3-0 \n");// debug
 			Delete_key(tree, x->ptr_arr[idx], key);
 			return;
 		}
 		else {
 			// case 3-A-1, if (left exist) and (ptr[left] len > min_degree -1), borrow
 			if (idx != 0 && x->ptr_arr[idx - 1]->key_len > min_degree - 1) {
-				printf("case 3-A-1 \n");// debug
+				//printf("case 3-A-1 \n");// debug
 				Borrow_Left(x, idx);
 				Delete_key(tree, x, key);
 				return;
 			}
 			// case 3-A-2, if (right exist) and (ptr[right] len > min_degree -1), borrow
 			else if (idx != x->ptr_len - 1 && x->ptr_arr[idx + 1]->key_len > min_degree - 1) {
-				printf("case 3-A-2 \n");// debug
+				//printf("case 3-A-2 \n");// debug
 				Borrow_Right(x, idx);
 				Delete_key(tree, x, key);
 				return;
 			}
 			// case 3-B, if if (left and right ptr len) < t, merge
 			else {
-				printf("case 3-B \n");// debug
+				//printf("case 3-B \n");// debug
 				struct Node* y = x->ptr_arr[key_idx];
 				struct Node* z = x->ptr_arr[key_idx + 1];
 				if (z->next_node != NULL) {
@@ -387,7 +394,7 @@ void Delete_key(struct BP_tree* tree, struct Node* x, int key) {
 				}
 				// Merge all x, y, z node's keys and ptrren into y node
 				if (!y->leaf) {
-					printf("case 3-B is not leaf \n");// debug
+					//printf("case 3-B is not leaf \n");// debug
 					// merge x to y
 					y->key_arr[y->key_len] = x->key_arr[key_idx];
 					y->key_len++;

@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define min_degree 2
+#define min_degree 30
 //int min_degree = 0;
 int size;
 int* database;
