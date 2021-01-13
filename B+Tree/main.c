@@ -3,8 +3,8 @@
 int main() {
 	// 1. Input Min_degree
 	printf("*****************\n");
-	//printf("** Enter the min_degree ** ");
-	//scanf_s("%d", &min_degree);
+	printf("** Enter the min_degree ** ");
+	scanf_s("%d", &min_degree);
 	printf("** Enter the number of index ** ");
 	scanf_s("%d", &size);
 	printf("\n** Init Tree ** \n");
@@ -49,9 +49,9 @@ int main() {
 	//	out_arr[i] = r;
 	//}
 
-	//printf("*****************\n");
-	//Visual(BP_tree.root, 0);
-	//Visual_head(&BP_tree);
+	printf("*****************\n");
+	Visual(BP_tree.root, 0);
+	Visual_head(&BP_tree);
 	/*size = 10;
 	int out_arr[10] = { 38, 365, 691, 18, 344, 671, 997, 324, 651, 977 };*/
 	printf("out_Arr: ");

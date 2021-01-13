@@ -44,8 +44,8 @@ struct Node* CreateNode() {
 	newNode->ptr_len = 0;
 	newNode->prev_node = NULL;
 	newNode->next_node = NULL;
-	//newNode->key_arr = (int*)malloc(sizeof(int) * (2 * min_degree - 1));
-	//newNode->ptr_arr = (struct Node**)malloc(sizeof(struct Node*) * (2 * min_degree));
+	newNode->key_arr = (int*)malloc(sizeof(int) * (2 * min_degree - 1));
+	newNode->ptr_arr = (struct Node**)malloc(sizeof(struct Node*) * (2 * min_degree));
 
 	return newNode;
 };
@@ -168,7 +168,7 @@ void NonFull(struct Node* node, int key) {
 		i++;
 		node->key_arr[i] = key;
 		node->key_len++;
-		node->ptr_arr[i] = (void*)database;
+		node->ptr_arr[i] = (struct Node*)database;
 		node->ptr_len++;
 	}
 	else {
@@ -178,7 +178,8 @@ void NonFull(struct Node* node, int key) {
 		}
 		i++;
 		// if ptr arr is full
-		if (node->ptr_arr[i]->key_len == (2 * min_degree - 1)) {
+		struct Node* ptr_temp = node->ptr_arr[i];
+		if (ptr_temp->key_len == (2 * min_degree - 1)) {
 			SplitChild(node, i);
 			NonFull(node, key);
 		}
@@ -360,21 +361,25 @@ void Delete_key(struct BP_tree* tree, struct Node* x, int key) {
 	else {
 		//printf("idx = %d ", idx);//debug
 		// case 3-0, if (ptr[idx] len > min_degree -1), go
-		if (x->ptr_arr[idx]->key_len > min_degree - 1) {
+		struct Node* ptr_x_temp1 = x->ptr_arr[idx];//debug ptr
+		struct Node* ptr_x_temp2 = x->ptr_arr[idx - 1];
+		struct Node* ptr_x_temp3 = x->ptr_arr[idx + 1];
+		if (ptr_x_temp1->key_len > min_degree - 1) {
 			//printf("case 3-0 \n");// debug
 			Delete_key(tree, x->ptr_arr[idx], key);
 			return;
 		}
 		else {
+			struct Node* a = x->ptr_arr + (idx + 1);
 			// case 3-A-1, if (left exist) and (ptr[left] len > min_degree -1), borrow
-			if (idx != 0 && x->ptr_arr[idx - 1]->key_len > min_degree - 1) {
+			if (idx != 0 && ptr_x_temp2->key_len > min_degree - 1) {
 				//printf("case 3-A-1 \n");// debug
 				Borrow_Left(x, idx);
 				Delete_key(tree, x, key);
 				return;
 			}
 			// case 3-A-2, if (right exist) and (ptr[right] len > min_degree -1), borrow
-			else if (idx != x->ptr_len - 1 && x->ptr_arr[idx + 1]->key_len > min_degree - 1) {
+			else if (idx != x->ptr_len - 1 && ptr_x_temp3->key_len > min_degree - 1) {
 				//printf("case 3-A-2 \n");// debug
 				Borrow_Right(x, idx);
 				Delete_key(tree, x, key);

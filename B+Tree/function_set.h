@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define min_degree 30
-//int min_degree = 0;
+//#define min_degree 2
+int min_degree;
 int size;
 int* database;
 
@@ -14,10 +14,10 @@ struct Node {
 	bool leaf;
 	int key_len;
 	int ptr_len;
-	//int* key_arr;
-	//struct node** ptr_arr;
-	int key_arr[2 * min_degree - 1];
-	struct Node* ptr_arr[2 * min_degree];
+	int* key_arr;
+	struct node** ptr_arr;
+	/*int key_arr[2 * min_degree - 1];
+	struct Node* ptr_arr[2 * min_degree];*/
 	struct Node* next_node;
 	struct Node* prev_node;
 };
